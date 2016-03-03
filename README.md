@@ -28,7 +28,7 @@ This is the preferred way. Simply add:
 
 ```groovy
 dependencies {
-    compile 'com.klinkerapps:simple_videoview:1.0.0@aar'
+    compile 'com.klinkerapps:simple_videoview:1.0.2@aar'
 }
 ```
 
@@ -54,7 +54,6 @@ Defined in the XML layout:
     android:layout_height="match_parent"
     app:loop="true"
     app:stopSystemAudio="true"
-    app:preserveAspectRatio="true"
     app:muted="false"/>
 ```
 
