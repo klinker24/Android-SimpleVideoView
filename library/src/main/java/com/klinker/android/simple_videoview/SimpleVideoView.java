@@ -86,6 +86,15 @@ public class SimpleVideoView extends LinearLayout {
         addView(progressBar);
 
         setGravity(Gravity.CENTER);
+    }
+
+    /**
+     * Add the SurfaceView to the layout.
+     */
+    private void addSurfaceView() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+        }
 
         // initialize the media player
         mediaPlayer = new MediaPlayer();
@@ -119,12 +128,7 @@ public class SimpleVideoView extends LinearLayout {
                 }
             }
         });
-    }
 
-    /**
-     * Add the SurfaceView to the layout.
-     */
-    private void addSurfaceView() {
         LinearLayout.LayoutParams surfaceViewParams =
                 new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         surfaceView = new SurfaceView(getContext());
@@ -219,7 +223,6 @@ public class SimpleVideoView extends LinearLayout {
         removeAllViews();
 
         try {
-            mediaPlayer.stop();
             mediaPlayer.release();
         } catch (Exception e) { }
     }
@@ -257,7 +260,7 @@ public class SimpleVideoView extends LinearLayout {
      * @return true if the video is playing, false otherwise
      */
     public boolean isPlaying() {
-        return mediaPlayer.isPlaying();
+        return mediaPlayer != null && mediaPlayer.isPlaying();
     }
 
     /**
