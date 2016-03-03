@@ -47,7 +47,7 @@ public class SimpleVideoView extends LinearLayout {
 
     private boolean loop = false;
     private boolean stopSystemAudio = false;
-    private boolean adjustSizeToScreen = true;
+    private boolean muted = false;
 
     private Uri videoUri = null;
 
@@ -71,7 +71,7 @@ public class SimpleVideoView extends LinearLayout {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SimpleVideoView, 0, 0);
         loop = a.getBoolean(R.styleable.SimpleVideoView_loop, false);
         stopSystemAudio = a.getBoolean(R.styleable.SimpleVideoView_stopSystemAudio, false);
-        adjustSizeToScreen = a.getBoolean(R.styleable.SimpleVideoView_adjustSizeToScreen, true);
+        muted = a.getBoolean(R.styleable.SimpleVideoView_muted, false);
         a.recycle();
 
         init();
@@ -103,13 +103,15 @@ public class SimpleVideoView extends LinearLayout {
             public void onPrepared(MediaPlayer mediaPlayer) {
                 progressBar.setVisibility(View.GONE);
 
-                if (adjustSizeToScreen) {
-                    scalePlayer();
-                }
+                scalePlayer();
 
                 if (stopSystemAudio) {
                     AudioManager am = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
                     am.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+                }
+
+                if (muted) {
+                    mediaPlayer.setVolume(0, 0);
                 }
 
                 mediaPlayer.setDisplay(surfaceHolder);
@@ -160,17 +162,17 @@ public class SimpleVideoView extends LinearLayout {
         int videoHeight = mediaPlayer.getVideoHeight();
         float videoProportion = (float) videoWidth / (float) videoHeight;
 
-        Screen screen = Screen.calculateScreen(getContext());
-        float screenProportion = (float) screen.width / (float) screen.height;
+        float screenProportion = (float) getWidth() / (float) getHeight();
         ViewGroup.LayoutParams lp = surfaceView.getLayoutParams();
 
         if (videoProportion > screenProportion) {
-            lp.width = screen.width;
-            lp.height = (int) ((float) screen.width/ videoProportion);
+            lp.width = getWidth();
+            lp.height = (int) ((float) getWidth() / videoProportion);
         } else {
-            lp.width = (int) (videoProportion * (float) screen.height);
-            lp.height = screen.height;
+            lp.width = (int) (videoProportion * (float) getHeight());
+            lp.height = getHeight();
         }
+
 
         surfaceView.setLayoutParams(lp);
     }
@@ -246,42 +248,11 @@ public class SimpleVideoView extends LinearLayout {
     }
 
     /**
-     * Whether you want the SimpleVideoView's size to ajust automatically for the size of the video
-     *
-     * @param adjustSizeToScreen Only disable if you are using a statically sized player
-     */
-    public void setAdjustSizeToScreen(boolean adjustSizeToScreen) {
-        this.adjustSizeToScreen = adjustSizeToScreen;
-    }
-
-    /**
      * Get whether or not the video is playing
      *
      * @return true if the video is playing, false otherwise
      */
     public boolean isPlaying() {
         return mediaPlayer != null && mediaPlayer.isPlaying();
-    }
-
-    /**
-     * Holds the screen dimensions
-     */
-    private static class Screen {
-        public int width;
-        public int height;
-
-        private Screen(int width, int height) {
-            this.width = width;
-            this.height = height;
-        }
-
-        public static Screen calculateScreen(Context context) {
-            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            Display display = wm.getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-
-            return new Screen(size.x, size.y);
-        }
     }
 }

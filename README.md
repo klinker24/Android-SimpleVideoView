@@ -54,7 +54,8 @@ Defined in the XML layout:
     android:layout_height="match_parent"
     app:loop="true"
     app:stopSystemAudio="true"
-    app:adjustSizeToScreen="true" />
+    app:preserveAspectRatio="true"
+    app:muted="false"/>
 ```
 
 You also need to cleanup after the video is done being viewed. I would recommend doing this in the `Activity#onStop` to aleviate some playback issues.

@@ -54,10 +54,11 @@
             <com.klinker.android.simple_videoview.SimpleVideoView
                 android:id="@+id/video_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="600dp"
                 app:loop="true"
                 app:stopSystemAudio="true"
-                app:adjustSizeToScreen="true"/>
+                app:preserveAspectRatio="true"
+                app:muted="false"/>
             
         </LinearLayout>
 
