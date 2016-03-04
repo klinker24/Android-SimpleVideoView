@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.0.4:
+- Catch an exception
+
 ### Version 1.0.3:
 - Make sure the progress spinner is centered
 
