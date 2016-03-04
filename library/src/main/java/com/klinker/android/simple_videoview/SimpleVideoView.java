@@ -253,6 +253,10 @@ public class SimpleVideoView extends LinearLayout {
      * @return true if the video is playing, false otherwise
      */
     public boolean isPlaying() {
-        return mediaPlayer != null && mediaPlayer.isPlaying();
+        try {
+            return mediaPlayer != null && mediaPlayer.isPlaying();
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
