@@ -58,7 +58,7 @@ Defined in the XML layout:
     app:muted="false"/>
 ```
 
-You also need to cleanup after the video is done being viewed. I would recommend doing this in the `Activity#onStop` to aleviate some playback issues.
+You also need to cleanup after the video is done being viewed. I would recommend doing this in the `Activity#onStop` to aleviate some playback issues. If you do not call the `SimpleVideoView#release` function, there will be leakage everywhere, you will immediately be able to tell something is wrong thanks to the slowdowns it will cause!
 
 ```java
 @Override
@@ -67,6 +67,10 @@ public void onStop() {
     videView.release();
 }
 ```
+
+## Example Usage within a List
+
+For an example of using this in a `RecyclerView`, I recommend checking out my app, Talon for Twitter, and it's implementation on the [`GiffySearch`](https://github.com/klinker24/Talon-for-Twitter/blob/master/src/main/java/com/klinker/android/twitter/ui/GiffySearch.java).
 
 ## Contributing
 
