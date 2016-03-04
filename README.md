@@ -13,6 +13,7 @@ This library looks to simplify the `VideoView`. It is just a wrapper of Android'
 
  - Correct aspect ratio for videos so they don't get stretched
  - Configurations for whether or not you want to take control of the system's audio
+ - Mute video content
  - Built in progress spinner
  - Light-weight and easy to add into `RecyclerView` or `ListView`
 
