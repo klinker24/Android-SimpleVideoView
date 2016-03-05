@@ -70,7 +70,9 @@ public void onStop() {
 
 ## Example Usage within a List
 
-For an example of using this in a `RecyclerView`, I recommend checking out my app, Talon for Twitter, and it's implementation on the [`GiffySearch`](https://github.com/klinker24/Talon-for-Twitter/blob/master/src/main/java/com/klinker/android/twitter/ui/GiffySearch.java).
+For an example of using this in a `RecyclerView`, I recommend checking out my app, Talon for Twitter, and it's implementation on the [`GiffySearch`](https://github.com/klinker24/Talon-for-Twitter/blob/master/src/main/java/com/klinker/android/twitter/ui/GiffySearch.java). With this specific example, we do not automatically start the video when they are scrolled to, but, of course, this is totally possible and I prefer the auto-play way. 
+
+I will leave the auto-play implementation up to you all for now though. I cannot give away all my secrets, just the tools to do them. I may add an example for this in the future. Just make sure that you are releasing the videos correctly, as described above!
 
 ## Contributing
 
