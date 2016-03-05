@@ -15,6 +15,7 @@
 package com.klinker.android.simple_videoview_example;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -37,6 +38,13 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         videoView = (SimpleVideoView) findViewById(R.id.video_view);
+        videoView.setErrorTracker(new SimpleVideoView.VideoPlaybackErrorTracker() {
+            @Override
+            public void onPlaybackError(Exception e) {
+                e.printStackTrace();
+                Snackbar.make(videoView, "Uh oh, error playing!", Snackbar.LENGTH_INDEFINITE).show();
+            }
+        });
         videoView.start(SAMPLE_VIDEO);
         videoView.setOnClickListener(new View.OnClickListener() {
             @Override
