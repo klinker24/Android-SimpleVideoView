@@ -94,6 +94,7 @@ public class SimpleVideoView extends RelativeLayout {
         if (getChildCount() == 0) {
             // ensure that we have the progress spinner added.
             // Can happen if you are recycling views on a list
+            progressBar.setVisibility(View.VISIBLE);
             addView(progressBar);
         }
 

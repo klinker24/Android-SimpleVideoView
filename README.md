@@ -29,7 +29,7 @@ This is the preferred way. Simply add:
 
 ```groovy
 dependencies {
-    compile 'com.klinkerapps:simple_videoview:1.1.0@aar'
+    compile 'com.klinkerapps:simple_videoview:1.1.2@aar'
 }
 ```
 
