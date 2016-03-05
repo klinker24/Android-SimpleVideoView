@@ -2,6 +2,9 @@
 
 ![Screenshot](preview.png)
 
+View the [YouTube Demo](https://youtu.be/NrZ3sNKl-NM), showcasing the libraries ability to be used within a `ListView` or `RecyclerView`.
+
+
 Google's `VideoView` is great, and powerful, but I was not a fan at all of working with it. It was difficult, complex, overweight, and confusing. It also came with some key issues:
 
  - Bad aspect ratio and video stretching in some cases
