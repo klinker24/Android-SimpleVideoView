@@ -90,8 +90,11 @@ public class SimpleVideoView extends RelativeLayout {
      * Add the SurfaceView to the layout.
      */
     private void addSurfaceView() {
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
+
+        if (getChildCount() == 0) {
+            // ensure that we have the progress spinner added.
+            // Can happen if you are recycling views on a list
+            addView(progressBar);
         }
 
         // initialize the media player
@@ -233,6 +236,11 @@ public class SimpleVideoView extends RelativeLayout {
     public void start(Uri videoUri) {
         this.videoUri = videoUri;
 
+        // You HAVE TO RELEASE the old video or you will have terrible performance issues.
+        if (mediaPlayer != null) {
+            throw new RuntimeException("You need to release the old video first!");
+        }
+
         // we will not load the surface view or anything else until we are given a video.
         // That way, if, say, you wanted to add the simple video view on a list or something,
         // it won't be as intensive. ( == Better performance.)
@@ -266,6 +274,8 @@ public class SimpleVideoView extends RelativeLayout {
         try {
             mediaPlayer.release();
         } catch (Exception e) { }
+
+        mediaPlayer = null;
     }
 
     /**
