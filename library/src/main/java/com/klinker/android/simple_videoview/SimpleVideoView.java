@@ -116,9 +116,13 @@ public class SimpleVideoView extends RelativeLayout {
 
                 progressBar.setVisibility(View.GONE);
 
-                mediaPlayer.setDisplay(surfaceHolder);
-                mediaPlayer.setLooping(loop);
-                mediaPlayer.start();
+                try {
+                    mediaPlayer.setDisplay(surfaceHolder);
+                    mediaPlayer.setLooping(loop);
+                    mediaPlayer.start();
+                } catch (IllegalArgumentException e) {
+                    // the surface has already been released
+                }
             }
         });
 
