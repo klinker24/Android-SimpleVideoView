@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.1.3:
+- Fix an `IllegalArgumentException`
+
 ### Version 1.1.2:
 - Forgot to ensure the progress bar is visible.
 

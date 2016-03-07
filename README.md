@@ -14,11 +14,11 @@ This library looks to simplify the `VideoView`. It is just a wrapper of Android'
 
 ## Features
 
+ - Light-weight and easy to add into `RecyclerView` or `ListView`
  - Correct aspect ratio for videos so they don't get stretched
  - Configurations for whether or not you want to take control of the system's audio
  - Mute video content
  - Built in progress spinner
- - Light-weight and easy to add into `RecyclerView` or `ListView`
 
 Note: This library does NOT contain any of the video controls at this time (play, pause, fast-forward, rewind), although it does expose the methods necessary for you to implement them on your own. This may be something I add in the future.
 
@@ -32,7 +32,7 @@ This is the preferred way. Simply add:
 
 ```groovy
 dependencies {
-    compile 'com.klinkerapps:simple_videoview:1.1.2@aar'
+    compile 'com.klinkerapps:simple_videoview:1.1.3@aar'
 }
 ```
 
