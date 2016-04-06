@@ -118,8 +118,8 @@ public class SimpleVideoView extends RelativeLayout {
 
                 try {
                     mediaPlayer.setDisplay(surfaceHolder);
-                    mediaPlayer.setLooping(loop);
                     mediaPlayer.start();
+                    mediaPlayer.setLooping(loop);
                 } catch (IllegalArgumentException e) {
                     // the surface has already been released
                 }
@@ -156,17 +156,6 @@ public class SimpleVideoView extends RelativeLayout {
                 return true;
             }
         });
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                // Some devices (Samsung) don't respond to the MediaPlayer#setLooping value
-                // for whatever reason. So this manually restarts it.
-                if (loop) {
-                    mediaPlayer.seekTo(0);
-                    mediaPlayer.start();
-                }
-            }
-        });
 
         final RelativeLayout.LayoutParams surfaceViewParams =
                 new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -186,7 +175,7 @@ public class SimpleVideoView extends RelativeLayout {
                             // this needs to be run on a background thread.
                             // set data source can take upwards of 1-2 seconds
                             mediaPlayer.setDataSource(getContext(), videoUri);
-                            mediaPlayer.prepare();
+                            mediaPlayer.prepareAsync();
                         } catch (Exception e) {
                             if (errorTracker != null) {
                                 errorTracker.onPlaybackError(e);
