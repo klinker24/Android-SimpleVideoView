@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.1.4:
+- Improve looping
+
 ### Version 1.1.3:
 - Fix an `IllegalArgumentException`
 
