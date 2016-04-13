@@ -119,9 +119,18 @@ public class SimpleVideoView extends RelativeLayout {
                 try {
                     mediaPlayer.setDisplay(surfaceHolder);
                     mediaPlayer.start();
-                    mediaPlayer.setLooping(loop);
                 } catch (IllegalArgumentException e) {
                     // the surface has already been released
+                }
+            }
+        });
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                if (loop) {
+                    mp.seekTo(0);
+                    mp.start();
                 }
             }
         });
