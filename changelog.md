@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.1.5:
+- Try to fix looping again, for some devices
+
 ### Version 1.1.4:
 - Improve looping
 
