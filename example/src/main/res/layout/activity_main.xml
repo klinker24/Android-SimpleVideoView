@@ -57,7 +57,8 @@
                 android:layout_height="600dp"
                 app:loop="true"
                 app:stopSystemAudio="true"
-                app:muted="false"/>
+                app:muted="false"
+                app:showSpinner="false"/>
             
         </LinearLayout>
 

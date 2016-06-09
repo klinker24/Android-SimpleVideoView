@@ -32,7 +32,7 @@ This is the preferred way. Simply add:
 
 ```groovy
 dependencies {
-    compile 'com.klinkerapps:simple_videoview:1.1.5'
+    compile 'com.klinkerapps:simple_videoview:1.2.0@aar'
 }
 ```
 
@@ -58,7 +58,8 @@ Defined in the XML layout:
     android:layout_height="match_parent"
     app:loop="true"
     app:stopSystemAudio="true"
-    app:muted="false"/>
+    app:muted="false"
+    app:showSpinner="true"/>
 ```
 
 You also need to cleanup after the video is done being viewed. I would recommend doing this in the `Activity#onStop` to aleviate some playback issues. If you do not call the `SimpleVideoView#release` function, there will be leakage everywhere, you will immediately be able to tell something is wrong thanks to the slowdowns it will cause!

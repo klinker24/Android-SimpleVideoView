@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.2.0:
+- Option to show the spinner or not when loading the video
+
 ### Version 1.1.5:
 - Try to fix looping again, for some devices
 

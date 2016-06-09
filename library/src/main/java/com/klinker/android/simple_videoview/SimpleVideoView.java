@@ -16,6 +16,7 @@ package com.klinker.android.simple_videoview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -46,6 +47,7 @@ public class SimpleVideoView extends RelativeLayout {
     private boolean loop = false;
     private boolean stopSystemAudio = false;
     private boolean muted = false;
+    private boolean showSpinner = true;
 
     private Uri videoUri = null;
 
@@ -70,6 +72,7 @@ public class SimpleVideoView extends RelativeLayout {
         loop = a.getBoolean(R.styleable.SimpleVideoView_loop, false);
         stopSystemAudio = a.getBoolean(R.styleable.SimpleVideoView_stopSystemAudio, false);
         muted = a.getBoolean(R.styleable.SimpleVideoView_muted, false);
+        showSpinner = a.getBoolean(R.styleable.SimpleVideoView_showSpinner, true);
         a.recycle();
 
         init();
@@ -98,6 +101,11 @@ public class SimpleVideoView extends RelativeLayout {
             addView(progressBar);
         }
 
+        // disable the spinner if we don't want it
+        if (!showSpinner && progressBar.getVisibility() != View.GONE) {
+            progressBar.setVisibility(View.GONE);
+        }
+
         // initialize the media player
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -114,7 +122,9 @@ public class SimpleVideoView extends RelativeLayout {
                     mediaPlayer.setVolume(0, 0);
                 }
 
-                progressBar.setVisibility(View.GONE);
+                if (progressBar.getVisibility() != View.GONE) {
+                    progressBar.setVisibility(View.GONE);
+                }
 
                 try {
                     mediaPlayer.setDisplay(surfaceHolder);
@@ -168,7 +178,13 @@ public class SimpleVideoView extends RelativeLayout {
 
         final RelativeLayout.LayoutParams surfaceViewParams =
                 new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        surfaceView = new SurfaceView(getContext());
+
+        if (!showSpinner) {
+            surfaceView = new TransparentSurfaceView(getContext());
+        } else {
+            surfaceView = new SurfaceView(getContext());
+        }
+
         surfaceView.setLayoutParams(surfaceViewParams);
 
         surfaceHolder = surfaceView.getHolder();
@@ -197,7 +213,6 @@ public class SimpleVideoView extends RelativeLayout {
         });
 
         addView(surfaceView, 0);
-
     }
 
     /**
@@ -297,6 +312,15 @@ public class SimpleVideoView extends RelativeLayout {
      */
     public void setStopSystemAudio(boolean stopSystemAudio) {
         this.stopSystemAudio = stopSystemAudio;
+    }
+
+    /**
+     * Whether or not you want to show the spinner while loading the video
+     *
+     * @param showSpinner
+     */
+    public void setShowSpinner(boolean showSpinner) {
+        this.showSpinner = showSpinner;
     }
 
     /**

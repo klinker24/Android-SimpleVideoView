@@ -4,5 +4,6 @@
         <attr name="loop" format="boolean"/>
         <attr name="stopSystemAudio" format="boolean"/>
         <attr name="muted" format="boolean"/>
+        <attr name="showSpinner" format="boolean"/>
     </declare-styleable>
 </resources>
