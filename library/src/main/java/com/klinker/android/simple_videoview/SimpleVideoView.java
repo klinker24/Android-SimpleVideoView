@@ -290,6 +290,7 @@ public class SimpleVideoView extends RelativeLayout {
         removeAllViews();
 
         try {
+            mediaPlayer.stop();
             mediaPlayer.release();
         } catch (Exception e) { }
 
