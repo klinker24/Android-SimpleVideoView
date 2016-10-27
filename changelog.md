@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.2.1:
+- Update dependencies and build tools for SDK 25
+
 ### Version 1.2.0:
 - Option to show the spinner or not when loading the video
 
