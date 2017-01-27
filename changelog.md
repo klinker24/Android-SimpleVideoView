@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.2.2:
+- Performance improvements for `ListView`/`RecyclerView` by cutting over to `TextureView` instead of `SurfaceView`
+
 ### Version 1.2.1:
 - Update dependencies and build tools for SDK 25
 
