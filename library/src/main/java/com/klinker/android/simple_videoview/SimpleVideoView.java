@@ -17,14 +17,17 @@ package com.klinker.android.simple_videoview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PixelFormat;
+import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -38,9 +41,10 @@ public class SimpleVideoView extends RelativeLayout {
 
     private MediaPlayer mediaPlayer;
 
-    private SurfaceView surfaceView;
-    private SurfaceHolder surfaceHolder;
     private LinearLayout progressBar;
+    private TextureView textureView;
+    private Surface surface;
+
 
     private VideoPlaybackErrorTracker errorTracker;
 
@@ -127,7 +131,7 @@ public class SimpleVideoView extends RelativeLayout {
                 }
 
                 try {
-                    mediaPlayer.setDisplay(surfaceHolder);
+                    mediaPlayer.setSurface(surface);
                     mediaPlayer.start();
                 } catch (IllegalArgumentException e) {
                     // the surface has already been released
@@ -179,20 +183,15 @@ public class SimpleVideoView extends RelativeLayout {
         final RelativeLayout.LayoutParams surfaceViewParams =
                 new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-        if (!showSpinner) {
-            surfaceView = new TransparentSurfaceView(getContext());
-        } else {
-            surfaceView = new SurfaceView(getContext());
-        }
+        textureView = new TextureView(getContext());
+        textureView.setLayoutParams(surfaceViewParams);
+        addView(textureView, 0);
 
-        surfaceView.setLayoutParams(surfaceViewParams);
-
-        surfaceHolder = surfaceView.getHolder();
-        surfaceHolder.addCallback(new SurfaceHolder.Callback() {
-            @Override public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) { }
-            @Override public void surfaceDestroyed(SurfaceHolder surfaceHolder) { }
+        textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
-            public void surfaceCreated(SurfaceHolder surfaceHolder) {
+            public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
+                surface = new Surface(surfaceTexture);
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -208,11 +207,23 @@ public class SimpleVideoView extends RelativeLayout {
                         }
                     }
                 }).start();
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
+
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
 
             }
         });
-
-        addView(surfaceView, 0);
     }
 
     /**
@@ -224,7 +235,7 @@ public class SimpleVideoView extends RelativeLayout {
         float videoProportion = (float) videoWidth / (float) videoHeight;
 
         float screenProportion = (float) getWidth() / (float) getHeight();
-        ViewGroup.LayoutParams lp = surfaceView.getLayoutParams();
+        ViewGroup.LayoutParams lp = textureView.getLayoutParams();
 
         if (videoProportion > screenProportion) {
             lp.width = getWidth();
@@ -234,7 +245,7 @@ public class SimpleVideoView extends RelativeLayout {
             lp.height = getHeight();
         }
 
-        surfaceView.setLayoutParams(lp);
+        textureView.setLayoutParams(lp);
     }
 
     /**
