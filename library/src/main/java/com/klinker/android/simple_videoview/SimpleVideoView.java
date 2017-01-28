@@ -21,6 +21,7 @@ import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -88,6 +89,11 @@ public class SimpleVideoView extends RelativeLayout {
     private void init() {
         // add a progress spinner
         progressBar = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.progress_bar, this, false);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            progressBar.setElevation(6);
+        }
+
         addView(progressBar);
 
         setGravity(Gravity.CENTER);
@@ -97,17 +103,63 @@ public class SimpleVideoView extends RelativeLayout {
      * Add the SurfaceView to the layout.
      */
     private void addSurfaceView() {
-
-        if (getChildCount() == 0) {
-            // ensure that we have the progress spinner added.
-            // Can happen if you are recycling views on a list
-            progressBar.setVisibility(View.VISIBLE);
-            addView(progressBar);
-        }
-
         // disable the spinner if we don't want it
         if (!showSpinner && progressBar.getVisibility() != View.GONE) {
             progressBar.setVisibility(View.GONE);
+        }
+
+        final RelativeLayout.LayoutParams surfaceViewParams =
+                new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+        textureView = new TextureView(getContext());
+        textureView.setLayoutParams(surfaceViewParams);
+        addView(textureView, 0);
+
+        textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
+                surface = new Surface(surfaceTexture);
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            // this needs to be run on a background thread.
+                            // set data source can take upwards of 1-2 seconds
+                            mediaPlayer.setDataSource(getContext(), videoUri);
+                            mediaPlayer.prepareAsync();
+                        } catch (Exception e) {
+                            if (errorTracker != null) {
+                                errorTracker.onPlaybackError(e);
+                            }
+                        }
+                    }
+                }).start();
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
+
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+
+            }
+        });
+    }
+
+    /**
+     * Prepare to play the media.
+     */
+    private void prepareMediaPlayer() {
+        if (mediaPlayer != null) {
+            release();
         }
 
         // initialize the media player
@@ -179,51 +231,6 @@ public class SimpleVideoView extends RelativeLayout {
                 return true;
             }
         });
-
-        final RelativeLayout.LayoutParams surfaceViewParams =
-                new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
-        textureView = new TextureView(getContext());
-        textureView.setLayoutParams(surfaceViewParams);
-        addView(textureView, 0);
-
-        textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-            @Override
-            public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
-                surface = new Surface(surfaceTexture);
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            // this needs to be run on a background thread.
-                            // set data source can take upwards of 1-2 seconds
-                            mediaPlayer.setDataSource(getContext(), videoUri);
-                            mediaPlayer.prepareAsync();
-                        } catch (Exception e) {
-                            if (errorTracker != null) {
-                                errorTracker.onPlaybackError(e);
-                            }
-                        }
-                    }
-                }).start();
-            }
-
-            @Override
-            public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
-
-            }
-
-            @Override
-            public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-                return false;
-            }
-
-            @Override
-            public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
-
-            }
-        });
     }
 
     /**
@@ -265,15 +272,15 @@ public class SimpleVideoView extends RelativeLayout {
     public void start(Uri videoUri) {
         this.videoUri = videoUri;
 
-        // You HAVE TO RELEASE the old video or you will have terrible performance issues.
-        if (mediaPlayer != null) {
-            throw new RuntimeException("You need to release the old video first!");
-        }
-
         // we will not load the surface view or anything else until we are given a video.
         // That way, if, say, you wanted to add the simple video view on a list or something,
         // it won't be as intensive. ( == Better performance.)
-        addSurfaceView();
+        if (textureView == null) {
+            addSurfaceView();
+            prepareMediaPlayer();
+        } else {
+            prepareMediaPlayer();
+        }
     }
 
     /**
@@ -298,8 +305,6 @@ public class SimpleVideoView extends RelativeLayout {
      * Should be called when you are leaving the playback activity
      */
     public void release() {
-        removeAllViews();
-
         try {
             mediaPlayer.stop();
             mediaPlayer.release();

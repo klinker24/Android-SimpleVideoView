@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.2.3:
+- Stop removing and recreating the `TextureView` as this is bad for performance.
+
 ### Version 1.2.2:
 - Performance improvements for `ListView`/`RecyclerView` by cutting over to `TextureView` instead of `SurfaceView`
 
