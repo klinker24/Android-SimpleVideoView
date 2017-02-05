@@ -119,22 +119,7 @@ public class SimpleVideoView extends RelativeLayout {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
                 surface = new Surface(surfaceTexture);
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            // this needs to be run on a background thread.
-                            // set data source can take upwards of 1-2 seconds
-                            mediaPlayer.setDataSource(getContext(), videoUri);
-                            mediaPlayer.prepareAsync();
-                        } catch (Exception e) {
-                            if (errorTracker != null) {
-                                errorTracker.onPlaybackError(e);
-                            }
-                        }
-                    }
-                }).start();
+                setMediaPlayerDataSource();
             }
 
             @Override
@@ -233,6 +218,24 @@ public class SimpleVideoView extends RelativeLayout {
         });
     }
 
+    private void setMediaPlayerDataSource() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // this needs to be run on a background thread.
+                    // set data source can take upwards of 1-2 seconds
+                    mediaPlayer.setDataSource(getContext(), videoUri);
+                    mediaPlayer.prepareAsync();
+                } catch (Exception e) {
+                    if (errorTracker != null) {
+                        errorTracker.onPlaybackError(e);
+                    }
+                }
+            }
+        }).start();
+    }
+
     /**
      * Adjust the size of the player so it fits on the screen.
      */
@@ -280,6 +283,7 @@ public class SimpleVideoView extends RelativeLayout {
             prepareMediaPlayer();
         } else {
             prepareMediaPlayer();
+            setMediaPlayerDataSource();
         }
     }
 

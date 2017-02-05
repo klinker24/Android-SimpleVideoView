@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.2.4:
+- Ensure that new media is loaded into the `SimpleVideoView` correctly and stop holding the reference to the old media.
+
 ### Version 1.2.3:
 - Stop removing and recreating the `TextureView` as this is bad for performance.
 
